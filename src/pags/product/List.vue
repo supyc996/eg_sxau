@@ -11,7 +11,7 @@
             <el-table-column prop="name" label="产品名称"></el-table-column>
             <el-table-column prop="price" label="价格"></el-table-column>
             <el-table-column prop="description" label="描述"></el-table-column>
-            <el-table-column prop="status" label="所属产品"></el-table-column>
+            <el-table-column prop="categoryId" label="所属栏目"></el-table-column>
             <el-table-column label="操作">
                 <template v-slot="slot">
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
@@ -34,26 +34,21 @@
     <el-form-item label="产品名称">
         <el-input v-model="form.name"></el-input>
     </el-form-item>
-     <el-form-item label="价格">
+     <el-form-item label="单价">
         <el-input v-model="form.price"></el-input>
     </el-form-item>
     <el-form-item label="所属栏目">
-         <el-dropdown v-model="form.status">
-            <span class="el-dropdown-link">下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>语言</el-dropdown-item>
-                <el-dropdown-item>家居养护</el-dropdown-item>
-                <el-dropdown-item>9357</el-dropdown-item>
-                <el-dropdown-item disabled>洗护服务</el-dropdown-item>
-                <el-dropdown-item divided>生活急救箱</el-dropdown-item>
-                <el-dropdown-item>yyy</el-dropdown-item>
-                <el-dropdown-item>水果慢羊羊</el-dropdown-item>
-            </el-dropdown-menu>
-        </el-dropdown>
+         <el-select v-model="form.categoryId">
+           <el-option
+           v-for="item in options"
+           :key="item.id"
+           :label="item.name"
+           :value="item.id"></el-option>
+           </el-select>
+           
     </el-form-item>
     <el-form-item label="描述">
-         <el-input v-model="form.description"></el-input>
+         <el-input v-model="form.description" type="textarea"></el-input>
     </el-form-item>
     <el-form-item label="产品主图">
          <el-input v-model=form.photo></el-input>
@@ -75,6 +70,13 @@ import querystring from 'querystring'
 export default {
     //methods用于存放网页中需要调用的方法
     methods:{
+         loadCategory(){
+            let url = "http://localhost:6677/category/findAll"
+      request.get(url).then((response)=>{
+        // 将查询结果设置到customers中，this指向外部函数的this
+        this.options = response.data;
+      })
+    },
         loadData(){
             let url = "http://localhost:6677/product/findAll"
       request.get(url).then((response)=>{
@@ -140,9 +142,7 @@ export default {
         },
       toAddHandler(){
             //将form变为初始值
-             this.form={
-                 type:"product"
-             }
+             this.form={}
            this.visible=true;
         }
     },
@@ -151,9 +151,8 @@ export default {
         return{
             visible:false,
             products:[],
-            form:{
-                type:"product"
-            }
+            option:[],
+            form:{}
             
         }
     },
@@ -162,6 +161,7 @@ export default {
         //this为当前vue实例对象
         //vue实例创建完毕
         this.loadData();
+        this.loadCategory();
     }
 }
 </script>
