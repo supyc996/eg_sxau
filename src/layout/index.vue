@@ -6,7 +6,11 @@
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
       </div>
-      <app-main />
+      <!--右侧内容-->
+      <div style="padding:1em">
+        <app-main />
+      </div>
+      <!--/右侧内容结束-->
     </div>
   </div>
 </template>
