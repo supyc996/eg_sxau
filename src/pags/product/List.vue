@@ -6,7 +6,17 @@
         <el-button type="danger" size="small">批量删除</el-button>
         <!---/按钮--->
         <!--表格--->
-        <el-table :data="products">
+       
+          <el-table ref = "multipleTable"
+    :data="products"
+    tooltip-effect="dark"
+    style="width: 100%"
+    @selection-change="handleSelectionChange">
+    <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
+    
             <el-table-column prop="id" label="编号"></el-table-column>
             <el-table-column prop="name" label="产品名称"></el-table-column>
             <el-table-column prop="price" label="价格"></el-table-column>
@@ -70,6 +80,19 @@ import querystring from 'querystring'
 export default {
     //methods用于存放网页中需要调用的方法
     methods:{
+      toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+ 
          loadCategory(){
             let url = "http://localhost:6677/category/findAll"
       request.get(url).then((response)=>{
