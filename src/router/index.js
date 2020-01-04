@@ -56,36 +56,50 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/customer',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'list',
+        name: 'CustomerList',
+        component: () => import('@/pags/customer/List'),
+        meta: { title: '顾客管理', icon: 'user' }
       }
     ]
   },
-
   {
-    path: '/form',
+    path: '/employee',
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'list',
+        name: 'EmployeeList',
+        component: () => import('@/pags/employee/List'),
+        meta: { title: '员工管理', icon: 'user' }
+      }
+    ]
+  },
+  {
+    path: '/category',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'CategoryList',
+        component: () => import('@/pags/category/List'),
+        meta: { title: '栏目管理', icon: 'user' }
+      }
+    ]
+  },
+  {
+    path: '/product',
+    component: Layout,
+    children: [
+      {
+        path: 'list',
+        name: 'ProductList',
+        component: () => import('@/pags/product/List'),
+        meta: { title: '产品管理', icon: 'user' }
       }
     ]
   },
