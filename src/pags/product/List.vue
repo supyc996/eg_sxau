@@ -21,12 +21,18 @@
         </el-table-column>
     </el-table>
     <!-- /表格结束 -->
+     <!-- 分页开始 -->
+  
+    <el-pagination
+            layout="prev, pager, next"
+            :total="50">
+        </el-pagination>
     <!-- 模态框 -->
     <el-dialog
-      title="录入产品信息"
+      title="详情信息"
       :visible.sync="visible"
       width="60%">
-        <!-- ---{{form}} -->
+      ---{{form}}
       <el-form :model="form" label-width="80px">
         <el-form-item label="编号">
           <el-input v-model="form.id"></el-input>
@@ -44,10 +50,11 @@
           <el-input v-model="form.categoryId"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+     <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeModalHandler">取 消</el-button>
         <el-button size="small" type="primary" @click="submitHandler">确 定</el-button>
       </span>
+      
     </el-dialog>
     <!-- /模态框 -->
   </div>
@@ -99,12 +106,20 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
-      })
-      
+       // alert(id);
+       //调用后台接口，传数据
+       let url="http://localhost:6677/product/deleteById?id="+id;
+       request.get(url).then((response)=>{
+         //删除结束后，刷新
+         this.loadData();
+         //提示结果
+          this.$message({
+            type: 'success',
+            message: response.message
+          });
+        })
+        
+      })     
     },
     toUpdateHandler(){
       this.visible = true;
@@ -116,25 +131,84 @@ export default {
       this.visible = true;
     }
   },
+  
   // 用于存放要向网页中显示的数据
-  data(){
-    return {
-      visible:false,
-      products:[],
-      form:{
-        type:"products"
-      },
-      checked:true
-    }
-  },
   created(){
-    // this为当前vue实例对象
-    // vue实例创建完毕 
-    this.loadData()
+        //在页面加载出来的时候加载数据
+        this.loadData();
+    },
+    data(){
+        return{
+            title:"录入信息",
+            visible:false,
+            products:[],
+            form:{
+                type:"product"
+            }
+
+        }
+    },
+  methods:{
+        //提交
+        submitHandler(){
+            let url="http://localhost:6677/product/saveOrUpdate";
+            //前端向后台发送请求，完成数据的保存数据
+            request({
+                url,
+                method:"post",
+                //告诉后台我的请求体中放的是查询字符串
+                handers:{
+                    "Content-Type":"application/x-www-form-urlencoded"
+                },
+                //请求体中的数据，将this.form转换为查询字符串发送给后台
+                data:querystring.stringify(this.form)
+            }).then((response)=>{
+                this.closeModuleHandler();
+                this.getData();
+                this.$message({
+                    message:response.message
+                })
+            })
+
+        },
+        //重载员工数据
+        loadData(){
+            //this ->vue 实例，通过vue实例访问该实例中的数据，methods
+            //this.title/this.toAddHandler
+            let url="http://localhost:6677/product/findAll"
+            request.get(url).then((response)=>{
+                //将查询结果设置到product中
+                this.products=response.data;
+            })
+        },
+        toAddHandler(){
+            this.title="录入产品信息";
+            this.visible=true;
+        },
+        closeModule(){
+            this.visible=false;
+        },
+        toDeleteHandler(id){
+            this.$confirm('此操作将永久删除该产品, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+            })
+        },
+        toUpdateHandler(){
+            this.title="修改产品信息";
+            this.visible=true;
+        }
+  
   }
 }
-</script>
+    </script>
 
-<style scoped>
+  <style scoped>
  
 </style>
