@@ -1,12 +1,23 @@
 <template>
 
+
 <div>
     <!--按钮-->
     <el-button type="success" size="small" @click="toAddHandler">添加</el-button>
         <el-button type="danger" size="small">批量删除</el-button>
         <!---/按钮--->
+         <el-table
+    ref="multipleTable"
+    :data="products"
+    tooltip-effect="dark"
+    style="width: 100%"
+    @selection-change="handleSelectionChange">
+    <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
         <!--表格--->
-        <el-table :data="products">
+      
             <el-table-column prop="id" label="编号"></el-table-column>
             <el-table-column prop="name" label="产品名称"></el-table-column>
             <el-table-column prop="price" label="价格"></el-table-column>
