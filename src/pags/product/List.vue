@@ -103,7 +103,7 @@ export default {
         this.$message({
           type:"success",
           message:response.message
-        })
+        }) 
       })
     },
     toDeleteHandler(id){
