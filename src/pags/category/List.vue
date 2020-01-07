@@ -4,7 +4,7 @@
     <!-- 按钮 -->
     <el-button type="primary" size="small" @click="toAddHandler">添加</el-button> 
     <el-button type="danger" size="small">批量删除</el-button>
-    <el-button @click="toggleSelection()" type="success" size="small">取消选择</el-button>
+    
     <!-- /按钮 -->
     <!-- 表格 -->
 

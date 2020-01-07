@@ -77,30 +77,34 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/category',
-    component: Layout,
-    children: [
-      {
-        path: 'list',
-        name: 'CategoryList',
-        component: () => import('@/pags/category/List'),
-        meta: { title: '栏目管理', icon: 'user' }
-      }
-    ]
-  },
-  {
-    path: '/product',
-    component: Layout,
-    children: [
-      {
-        path: 'list',
-        name: 'ProductList',
-        component: () => import('@/pags/product/List'),
-        meta: { title: '产品管理', icon: 'user' }
-      }
-    ]
-  },
+  
+    
+    {
+      path: '/nested',
+      component: Layout,
+      redirect: '/nested/category',
+      name: 'systemlist',
+      meta: {
+        title: '系统管理',
+        icon: 'tree'
+      },
+      children: [
+        {
+          path: 'category',
+          component: () => import('@/pags/category/List'), // Parent router-view
+          name: 'categorylist',
+          meta: { title: '栏目管理' ,icon: 'user'} 
+        },
+        {
+          path: 'product',
+          component: () => import('@/pags/product/List'),
+          meta: { title: '产品管理',icon: 'user' }
+        }
+      ]
+    },
+      
+    
+  
   {
     path: '/order',
     component: Layout,
