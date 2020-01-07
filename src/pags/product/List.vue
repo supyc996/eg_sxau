@@ -6,6 +6,7 @@
     <!-- /按钮 -->
     <!-- 表格 -->
 
+<<<<<<< HEAD
     <el-table
     ref="multipleTable"
     :data="products"
@@ -69,6 +70,70 @@
       </span>
     </el-dialog>
     <!-- /模态框 -->
+=======
+<div>
+    <!--按钮-->
+    <el-button type="success" size="small" @click="toAddHandler">添加</el-button>
+        <el-button type="danger" size="small">批量删除</el-button>
+        <!---/按钮--->
+        <!--表格--->
+        <el-table :data="products">
+            <el-table-column prop="id" label="编号"></el-table-column>
+            <el-table-column prop="name" label="产品名称"></el-table-column>
+            <el-table-column prop="price" label="价格"></el-table-column>
+            <el-table-column prop="description" label="描述"></el-table-column>
+            <el-table-column prop="categoryId" label="所属产品"></el-table-column>
+            <el-table-column label="操作">
+                <template v-slot="slot">
+                    <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
+                    <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
+                    <a href="" @click.prevent="">详情</a>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!---表格结束--->
+        <!----分页开始--->
+         <el-pagination layout="prev, pager, next" :total="50"></el-pagination>
+         <!---分页结束--->
+         <!---模块框--->
+         <el-dialog
+  title="录入产品信息"
+  :visible.sync="visible"
+  width="60%">
+ ---{{form}}
+ <el-form :model="form" label-width="80px">
+    <el-form-item label="产品名称">
+        <el-input v-model="form.name"></el-input>
+    </el-form-item>
+     <el-form-item label="价格">
+        <el-input v-model="form.price"></el-input>
+    </el-form-item>
+    <el-form-item label="所属栏目">
+         <el-select v-model="form.categoryId">
+             <el-option v-for="item in options"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id" 
+                        ></el-option>
+         </el-select>
+         
+    </el-form-item>
+    <el-form-item label="描述">
+         <el-input  type="textarea"  v-model="form.description"></el-input>
+    </el-form-item>
+    <el-form-item label="产品主图">
+         <el-upload
+            class="upload-demo"
+            action="http://134.175.154.93:6677/file/upload"
+            :on-success="uploadSuccessHadler"
+            :file-list="fileList"
+            list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+</el-upload>
+    </el-form-item>
+ </el-form>
+>>>>>>> 094dd491d056d00edab13c712efa7d305ce5ec08
 
   </div>
 </template>
@@ -77,6 +142,7 @@
 import request from '@/utils/request'
 import querystring from 'querystring'
 export default {
+<<<<<<< HEAD
   // 用于存放网页中需要调用的方法
   methods:{
     toggleSelection(rows) {
@@ -93,6 +159,18 @@ export default {
       },
     loadCategory(){
       let url = "http://localhost:6677/category/findAll"
+=======
+    //methods用于存放网页中需要调用的方法
+    methods:{
+         uploadSuccessHadler(response){
+            let photo="http://134.175.154.93:8888/group1/"+response.data.id
+            //将图片地址设置到form中，便于一起提交给后台
+            this.form.photo=photo;
+
+        },
+        loadCategory(){
+            let url = "http://localhost:6677/category/findAll"
+>>>>>>> 094dd491d056d00edab13c712efa7d305ce5ec08
       request.get(url).then((response)=>{
         // 将查询结果设置到products中，this指向外部函数的this
         this.options = response.data;
@@ -147,6 +225,7 @@ export default {
             type: 'success',
             message: response.message
           });
+<<<<<<< HEAD
         })
         
         
@@ -157,6 +236,40 @@ export default {
       // 模态框表单中显示出当前行的信息
       this.form = row;
       this.visible = true;
+=======
+        }) 
+        },
+        toUpdateHandler(row){
+            //
+            this.filelist=[];
+            this.form=row;
+            this.visible=true;
+        },
+        closeModalHandler(){
+            this.visible=false;
+        },
+      toAddHandler(){
+            this.filelist=[];
+            //将form变为初始值
+             this.form={
+                 type:"product"
+             }
+           this.visible=true;
+        }
+    },
+    //用于存放要向网页中显示的数据
+    data(){
+        return{
+            visible:false,
+            products:[],
+            options:[],
+            filelist:[],
+            form:{
+                type:"product"
+            }
+            
+        }
+>>>>>>> 094dd491d056d00edab13c712efa7d305ce5ec08
     },
     closeModalHandler(){
       this.visible = false;
