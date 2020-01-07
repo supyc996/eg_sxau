@@ -61,7 +61,17 @@
          <el-input v-model="form.description" type="textarea"></el-input>
     </el-form-item>
     <el-form-item label="产品主图">
-         <el-input v-model=form.photo></el-input>
+      <el-upload
+            class="upload-demo"
+            action="https://134.175.154.93:6677/file/upload"
+            :on-success="uploadSuccessHandler"
+            
+            :file-list="fileList"
+            list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+         
     </el-form-item>
  </el-form>
 
@@ -155,6 +165,7 @@ export default {
           });
         }) 
         },
+        
         toUpdateHandler(row){
             //
             this.form=row;
@@ -175,7 +186,8 @@ export default {
             visible:false,
             products:[],
             option:[],
-            form:{}
+            form:{},
+            fileList:{}
             
         }
     },
