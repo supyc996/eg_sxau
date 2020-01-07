@@ -153,7 +153,7 @@ export default {
                 //加id的目的是看有没有拿到
                 message: '删除成功!'+id
           });
-        }) 
+        })  
         },
         toUpdateHandler(row){
             //
