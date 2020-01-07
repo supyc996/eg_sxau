@@ -6,22 +6,12 @@
         <el-button type="danger" size="small">批量删除</el-button>
         <!---/按钮--->
         <!--表格--->
-       
-          <el-table ref = "multipleTable"
-    :data="products"
-    tooltip-effect="dark"
-    style="width: 100%"
-    @selection-change="handleSelectionChange">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    
+        <el-table :data="products">
             <el-table-column prop="id" label="编号"></el-table-column>
             <el-table-column prop="name" label="产品名称"></el-table-column>
             <el-table-column prop="price" label="价格"></el-table-column>
             <el-table-column prop="description" label="描述"></el-table-column>
-            <el-table-column prop="categoryId" label="所属栏目"></el-table-column>
+            <el-table-column prop="categoryId" label="所属产品"></el-table-column>
             <el-table-column label="操作">
                 <template v-slot="slot">
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
@@ -44,24 +34,32 @@
     <el-form-item label="产品名称">
         <el-input v-model="form.name"></el-input>
     </el-form-item>
-     <el-form-item label="单价">
+     <el-form-item label="价格">
         <el-input v-model="form.price"></el-input>
     </el-form-item>
     <el-form-item label="所属栏目">
          <el-select v-model="form.categoryId">
-           <el-option
-           v-for="item in options"
-           :key="item.id"
-           :label="item.name"
-           :value="item.id"></el-option>
-           </el-select>
-           
+             <el-option v-for="item in options"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id" 
+                        ></el-option>
+         </el-select>
+         
     </el-form-item>
     <el-form-item label="描述">
-         <el-input v-model="form.description" type="textarea"></el-input>
+         <el-input  type="textarea"  v-model="form.description"></el-input>
     </el-form-item>
     <el-form-item label="产品主图">
-         <el-input v-model=form.photo></el-input>
+         <el-upload
+            class="upload-demo"
+            action="http://134.175.154.93:6677/file/upload"
+            :on-success="uploadSuccessHadler"
+            :file-list="fileList"
+            list-type="picture">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+</el-upload>
     </el-form-item>
  </el-form>
 
@@ -80,20 +78,13 @@ import querystring from 'querystring'
 export default {
     //methods用于存放网页中需要调用的方法
     methods:{
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
- 
-         loadCategory(){
+         uploadSuccessHadler(response){
+            let photo="http://134.175.154.93:8888/group1/"+response.data.id
+            //将图片地址设置到form中，便于一起提交给后台
+            this.form.photo=photo;
+
+        },
+        loadCategory(){
             let url = "http://localhost:6677/category/findAll"
       request.get(url).then((response)=>{
         // 将查询结果设置到customers中，this指向外部函数的this
@@ -153,10 +144,11 @@ export default {
                 //加id的目的是看有没有拿到
                 message: '删除成功!'+id
           });
-        })  
+        }) 
         },
         toUpdateHandler(row){
             //
+            this.filelist=[];
             this.form=row;
             this.visible=true;
         },
@@ -164,8 +156,11 @@ export default {
             this.visible=false;
         },
       toAddHandler(){
+            this.filelist=[];
             //将form变为初始值
-             this.form={}
+             this.form={
+                 type:"product"
+             }
            this.visible=true;
         }
     },
@@ -174,8 +169,11 @@ export default {
         return{
             visible:false,
             products:[],
-            option:[],
-            form:{}
+            options:[],
+            filelist:[],
+            form:{
+                type:"product"
+            }
             
         }
     },
